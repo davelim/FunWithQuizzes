@@ -5,41 +5,48 @@ public class MultipleChoice : Question
 {
     // field(s)/prop(s)
     public readonly List<string> _choices;
+    private readonly string _choiceIndices;
     private readonly string _correctAnswer;
     // constructor(s)
     public MultipleChoice(string questionStr, List<string> choices, string correctAnswer)
     : base(questionStr)
     {
         _choices = choices;
+        _choiceIndices = String.Join(", ", Enumerable.Range(0, _choices.Count));
         _correctAnswer = correctAnswer;
     }
     // override(s)
     // methods(s)
     public override string AskNGetAnswer()
     {
-        int userChoice;
-        bool correctFormat;
+        int userChoice = -1;
+        bool correctFormat = false;
         Console.WriteLine(BuildQuestion());
-        do {
+        while (true)
+        {
             // TODO(s):
-            // - handle case where Console.ReadLine() returns 'null'
-            // - add prompt to remind user of available choices
+            // - handle case when Console.ReadLine() returns 'null'
+            // - allow user go to next question
             string? answer = Console.ReadLine();
             correctFormat = int.TryParse(answer, out userChoice);
-        } while (!correctFormat || userChoice < 0 || userChoice > _choices.Count - 1);
+            if (correctFormat && userChoice >= 0 && userChoice < _choices.Count)
+            {
+                break;
+            }
+            Console.WriteLine($"'{answer}' is not one of the options. Please choose one of [{_choiceIndices}]");
+        }
         return _choices[userChoice];
     }
 
     private StringBuilder BuildQuestion()
     {
-        string choiceIndices =
-          String.Join(", ", Enumerable.Range(0, _choices.Count));
         StringBuilder sb = new();
+        sb.AppendLine(Constants.DASHED_LINE);
         sb.AppendLine(_questionStr);
-        sb.AppendLine($"Please choose one of [{choiceIndices}]:");
+        sb.AppendLine($"Please choose one of [{_choiceIndices}]:");
         for (int i = 0; i < _choices.Count; i++)
         {
-            sb.AppendLine($"{i} - {_choices[i]}");
+            sb.AppendLine($"> {i} - {_choices[i]}");
         }
         return sb;
     }
