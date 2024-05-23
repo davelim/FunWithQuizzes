@@ -42,7 +42,9 @@ public class CheckBox : Question
         int score = 0;
         foreach (string s in answer.Split(" "))
         {
-            if (_correctAnswers.Contains(_choices[int.Parse(s)]))
+            int choice;
+            if (int.TryParse(s, out choice) &&
+                _correctAnswers.Contains(_choices[choice]))
             {
                 score += 1;
             }
