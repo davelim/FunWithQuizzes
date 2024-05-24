@@ -21,7 +21,7 @@ Question q3 = new TrueFalse(
 quiz.AddQuestion(q3);
 
 // more questions
-quiz.AddQuestion(new ShortAnswer("<Short answer question>?", 80));
+quiz.AddQuestion(new Text("<Short answer question>?"));
 quiz.AddQuestion(new LinearScale("<Linear scale question>?", 42, 50));
 
 quiz.Run();

@@ -10,27 +10,29 @@ namespace FunWithQuizzes;
 // - handle arrow keys
 // - handle situation where use types too quickly
 
-public class ShortAnswer: Question
+public class Text: Question
 {
     // field(s)/prop(s)
     public int Limit {get;} // readonly, assigned in constructor
+    public ConsoleKey StopChar {get;} // readonly, assigned in constructor
     System.Text.StringBuilder Answer {get;} // set capacity in constructor, appended in Ask()
     // constructor(s)
-    public ShortAnswer(string questionStr, int limit=80)
+    public Text(string questionStr, int limit=80, ConsoleKey stopChar = ConsoleKey.Enter)
     : base(questionStr) {
-        Limit = limit;
         Answer = new(limit, limit);
+        Limit = limit;
+        StopChar = stopChar;
     }
     // override(s)
     public override void Ask()
     {
         Console.WriteLine(_questionStr);
-        Console.WriteLine($"Please limit answer to {Limit} characters or less ([ENTER] to submit).");
+        Console.WriteLine($"Please limit answer to {Limit} characters or less ([{StopChar}] to submit).");
         Console.Write("> ");
         while (true) {
             int length = ListenForKey();
             Console.WriteLine(Constants.DASHED_LINE);
-            Console.WriteLine($"Your answer was {length} characters. Please confirm answer [ENTER].");
+            Console.WriteLine($"Your answer was {length} characters. Please confirm answer [{StopChar}].");
             Console.WriteLine($"{Answer}");
             Console.WriteLine(Constants.DASHED_LINE);
             ConsoleKeyInfo cki = Console.ReadKey();
