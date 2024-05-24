@@ -1,67 +1,45 @@
-using System.Text;
 namespace FunWithQuizzes;
 
 public class TrueFalse : Question
 {
     // field(s)/prop(s)
-    private readonly bool _correctAnswer;
+    public List<bool> Choices {get;} = [false, true];
+    public bool CorrectAnswer {get;} // readonly, assigned in constructor
+    public bool Answer {get; set;} // assigned in Ask()
     // constructor(s)
     public TrueFalse(string questionStr, bool correctAnswer)
     : base(questionStr)
     {
-        _correctAnswer = correctAnswer;
+        CorrectAnswer = correctAnswer;
     }
     // override(s)
-    // methods(s)
-    public override string AskNGetAnswer()
+    public override void Ask()
     {
-        string userChoice;
-        Console.WriteLine(BuildQuestion());
+        Console.WriteLine(_questionStr);
+        Console.WriteLine("Please choose one:");
+        Console.WriteLine(Common.ElmtPerLine(Choices));
         while (true)
         {
-            string? answer = Console.ReadLine();
-            if (answer != null
-                && (answer.Contains("t") 
-                    || answer.Contains("T")
-                    || answer.Contains("f")
-                    || answer.Contains("F")))
+            // TODO:
+            // - Let user confirm/start over?
+            string? input = Console.ReadLine();
+            int choiceInt;
+            if (int.TryParse(input, out choiceInt))
             {
-                userChoice = ParseChoice(answer);
-                break;
+                if (choiceInt == 0 || choiceInt == 1)
+                {
+                    Answer = Choices[choiceInt];
+                    break;
+                }
             }
-            Console.WriteLine($"'{answer}' is not an option. Please choose [T/F]");
+            Console.WriteLine($"Sorry, '{input}' is not one of the choices.");
+            Console.WriteLine("Please choose one:");
+            Console.WriteLine(Common.ElmtPerLine(Choices));
         }
-        return userChoice;
     }
-    private string ParseChoice(string str)
+    public override int Grade()
     {
-        if (str.Contains("t") || str.Contains("T"))
-        {
-            return "T";
-        }
-        else
-        {
-            return "F";
-        }
+        return CorrectAnswer == Answer ? 1 : 0;
     }
-    private bool ParseBool(string str)
-    {
-        if (str.Contains("t") || str.Contains("T"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public override int Score(string answer)
-    {
-        return _correctAnswer == ParseBool(answer) ? 1 : 0;
-    }
-    private StringBuilder BuildQuestion()
-    {
-        return new StringBuilder($"{_questionStr}. Please choose [T/F]");
-    }
-
+    // methods(s)
 }
