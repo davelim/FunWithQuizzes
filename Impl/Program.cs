@@ -20,6 +20,7 @@ Question q3 = new TrueFalse(
 );
 quiz.AddQuestion(q3);
 // more questions
+quiz.AddQuestion(new ShortAnswer("<Question with short answer>?", 80));
 
 quiz.Run();
 Console.WriteLine($"score: {quiz.Score}");
