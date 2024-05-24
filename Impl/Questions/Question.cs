@@ -14,6 +14,6 @@ public abstract class Question
     }
     // override(s)
     // method(s)
-    public abstract string AskNGetAnswer();
-    public abstract int Score(string answer);
+    public abstract void Ask();
+    public abstract int Grade();
 }

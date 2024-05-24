@@ -4,54 +4,44 @@ namespace FunWithQuizzes;
 public class MultipleChoice : Question
 {
     // field(s)/prop(s)
-    public readonly List<string> _choices;
-    private readonly string _choiceIndices;
-    private readonly string _correctAnswer;
+    public List<string> Choices {get;} // readonly, assigned in constructor
+    public string CorrectAnswer {get;} // readonly, assigned in constructor
+    public string? Answer {get; set;} // assigned in Ask()
     // constructor(s)
     public MultipleChoice(string questionStr, List<string> choices, string correctAnswer)
     : base(questionStr)
     {
-        _choices = choices;
-        _choiceIndices = String.Join(", ", Enumerable.Range(0, _choices.Count));
-        _correctAnswer = correctAnswer;
+        Choices = choices;
+        CorrectAnswer = correctAnswer;
     }
     // override(s)
-    // methods(s)
-    public override string AskNGetAnswer()
+    public override void Ask()
     {
-        int userChoice = -1;
-        bool correctFormat = false;
-        Console.WriteLine(BuildQuestion());
+        Console.WriteLine(_questionStr);
+        Console.WriteLine("Please choose one:");
+        Console.WriteLine(Common.ElmtPerLine(Choices));
         while (true)
         {
-            // TODO(s):
-            // - handle case when Console.ReadLine() returns 'null'
-            // - allow user go to next question
-            string? answer = Console.ReadLine();
-            correctFormat = int.TryParse(answer, out userChoice);
-            if (correctFormat && userChoice >= 0 && userChoice < _choices.Count)
+            // TODO: 
+            // - Let user confirm/start over?
+            string? input = Console.ReadLine();
+            int choiceInt;
+            if (int.TryParse(input, out choiceInt))
             {
-                break;
+                if (choiceInt >= 0 && choiceInt < Choices.Count)
+                {
+                    Answer = Choices[choiceInt];
+                    break;
+                }
             }
-            Console.WriteLine($"'{answer}' is not one of the options. Please choose one of [{_choiceIndices}]");
+            Console.WriteLine($"Sorry, '{input}' is not one of the choices.");
+            Console.WriteLine("Please choose one:");
+            Console.WriteLine(Common.ElmtPerLine(Choices));
         }
-        return _choices[userChoice];
     }
-
-    private StringBuilder BuildQuestion()
+    public override int Grade()
     {
-        StringBuilder sb = new();
-        sb.AppendLine(Constants.DASHED_LINE);
-        sb.AppendLine(_questionStr);
-        sb.AppendLine($"Please choose one of [{_choiceIndices}]:");
-        for (int i = 0; i < _choices.Count; i++)
-        {
-            sb.AppendLine($"> {i} - {_choices[i]}");
-        }
-        return sb;
+        return Answer != null && Answer.Equals(CorrectAnswer) ? 1 : 0;
     }
-    public override int Score(string answer)
-    {
-        return answer.Equals(_correctAnswer) ? 1 : 0;
-    }
+    // methods(s)
 }

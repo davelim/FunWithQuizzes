@@ -3,6 +3,7 @@ namespace FunWithQuizzes;
 public class Quiz
 {
     // field(s)/prop(s)
+    // TODO: Dictionary is overkill? Use list?
     private Dictionary<int,Question> Questions = [];
     public int Score { get; private set;}
     // constructor(s)
@@ -15,16 +16,12 @@ public class Quiz
             Questions.Add(q._id, q);
         }
     }
-    public void RemoveQuestion(Question q)
-    {
-        throw new NotImplementedException();
-    }
     public void Run() {
         foreach (KeyValuePair<int, Question> kvp in Questions)
         {
             Question q = kvp.Value;
-            string ans = q.AskNGetAnswer();
-            Score += q.Score(ans);
+            q.Ask();
+            Score += q.Grade();
         }
     }
 }
