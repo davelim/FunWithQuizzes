@@ -19,8 +19,10 @@ Question q3 = new TrueFalse(
     false
 );
 quiz.AddQuestion(q3);
+
 // more questions
-quiz.AddQuestion(new ShortAnswer("<Question with short answer>?", 80));
+quiz.AddQuestion(new ShortAnswer("<Short answer question>?", 80));
+quiz.AddQuestion(new LinearScale("<Linear scale question>?", 42, 50));
 
 quiz.Run();
 Console.WriteLine($"score: {quiz.Score}");
